@@ -1,0 +1,13 @@
+---
+title: "ETC 5523 Blog "
+description: |
+   Welcome to ETC5523-Blog. We hope you enjoy reading what we have to say!
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+![](monash.png){width=100}
+
