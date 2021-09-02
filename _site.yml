@@ -1,5 +1,6 @@
 name: " Distill Blog"
 title: "ETC 5523 Communicating with Data"
+theme: "wei_theme.css"
 description: |
   ETC 5523 Communicating with Data 
 output_dir: "_site"
@@ -11,4 +12,6 @@ navbar:
       href: France.html 
     - icon: fab fa-github
       href: https://github.com/JuntongWei
-output: distill::distill_article
+output: 
+  distill::distill_article:
+    css: "style.css"

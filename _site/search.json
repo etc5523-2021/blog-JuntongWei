@@ -2,19 +2,24 @@
   "articles": [
     {
       "path": "France.html",
-      "title": "France",
-      "description": "my R ponderings...",
-      "author": [],
-      "contents": "\n\n\n\n",
-      "last_modified": "2021-08-31T16:52:56+10:00"
+      "title": "Covid-19 in France",
+      "author": [
+        {
+          "name": "Juntong Wei",
+          "url": {}
+        }
+      ],
+      "date": "09-02-2021",
+      "contents": "\n\nIntroduction\nHave you ever heard of the lyrics: “Imagine there’s no countries. It isn’t hard to do.” from Imagine by John Lennon. It was not that difficult to imagine under the globalization before everything since 2019. However, the world has changed since then. The Coronavirus is familiarly enouth to you all as it has affect all humankind since its outbreak. Due to the Pandemic, the borders had shut down on after another, the cities were also locked down. What’s more, the living styles had also changed a lot. Since it has been affecting us for a long period of time and it is still existing, it is necessary for us get to know more about it and fight against the disaster together to restore the order of the world. This erport mainly focus on France\nThis report gievs an analysis about covid-19 in france.\nData exploration\n\n\n\nanalysis\n\n\n\nNumerical summary statistics\n\n\n\n",
+      "last_modified": "2021-09-03T01:14:13+10:00"
     },
     {
       "path": "index.html",
       "title": "ETC 5523 Blog ",
       "description": "Welcome to ETC5523-Blog. We hope you enjoy reading what we have to say!\n",
       "author": [],
-      "contents": "\n\n\n\n\n",
-      "last_modified": "2021-08-31T17:05:50+10:00"
+      "contents": "\nEnter My Blog \n\n\n\n",
+      "last_modified": "2021-09-03T01:14:13+10:00"
     }
   ],
   "collections": []

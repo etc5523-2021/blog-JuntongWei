@@ -9,5 +9,6 @@ site: distill::distill_website
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+[Enter My Blog](France.html)
 ![](monash.png){width=100}
 
