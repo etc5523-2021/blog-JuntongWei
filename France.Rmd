@@ -29,7 +29,16 @@ library(tidyverse)
 library(readr)
 library(lubridate)
 library(ggplot2)
+library(plotly)
 library(formattable)
+library(sf)
+library(DT)
+library(psych)
+library(kableExtra)
+library(viridis)
+library(hrbrthemes)
+
+
 
 France <- read_csv("Data/France.csv") %>% 
   select(date| total_vaccinations| people_vaccinated| people_fully_vaccinated|vaccine)
@@ -48,8 +57,35 @@ age_vaccinations <- read_csv("Data/vaccinations-by-age-group.csv") %>%
 | location          |   character      | Geographical location                                      |
 | people_vaccinated_per_hundred |    Numerical      | Total number of people who received at least one vaccine dose per 100 people in the total population                                      |
 | people_fully_vaccinated_per_hundred |    Numerical      | Total number of people who received all doses prescribed by the vaccination protocol per 100 people in the total population                                       |
+### Numerical statistical summary in age_vaccinations data
 
-#### variable descriptions for France data source 
+```{r}
+age_vaccinations%>% 
+  select(people_vaccinated_per_hundred, people_fully_vaccinated_per_hundred) %>% 
+  describe() -> age_des
+
+age_des %>% 
+    mutate(mean = round(mean,2),
+         sd = round(sd, 2),
+         median = round(median,2),
+         trimmed = round(trimmed,2),
+         mad = round(mad,2),
+         min = round(min,2),
+         max = round(max,2),
+         range = round(range,2),
+         skew = round(skew,2),
+         kurtosis = round(kurtosis,2),
+         se = round(se,2)) %>% 
+  kable(caption = "Statistics summary of vaccination data in age group", 
+      align = "l" ) %>% 
+  row_spec(0, color = "white", background = "#008000") %>% 
+  scroll_box(width = "100%", height = "150px") %>% 
+  kable_styling(bootstrap_options = "striped", font_size = 10)
+
+```
+
+
+### variable descriptions for France data source 
 
 |Variables      |Types         | Description                                              |
 |-------------------|--------------|----------------------------------------------------------|
@@ -59,6 +95,32 @@ age_vaccinations <- read_csv("Data/vaccinations-by-age-group.csv") %>%
 | people_fully_vaccinated           |    Numerical      | Total number of people who received all doses prescribed by the vaccination protocol                                        |
 | Vaccine         |    character      | Type of vaccine 
 
+### Numerical statistical summary in France data
+
+```{r}
+France %>% 
+  select(-date) %>% 
+  describe() -> vac_des
+
+vac_des %>% 
+    mutate(mean = round(mean,2),
+         sd = round(sd, 2),
+         median = round(median,2),
+         trimmed = round(trimmed,2),
+         mad = round(mad,2),
+         min = round(min,2),
+         max = round(max,2),
+         range = round(range,2),
+         skew = round(skew,2),
+         kurtosis = round(kurtosis,2),
+         se = round(se,2)) %>% 
+  kable(caption = "Statistics summary of vaccination data", 
+      align = "l", ) %>% 
+  row_spec(0, color = "white", background = "#008000") %>% 
+  scroll_box(width = "100%", height = "150px") %>% 
+  kable_styling(bootstrap_options = "striped", font_size = 10)
+
+```
 
 ## Data Exploratory
 
@@ -97,7 +159,7 @@ The above table illustrate the popularizing rate of vaccination in each age grou
 
 ### The timeline of vaccination
 
-```{r fig, }
+```{r fig, fig.align='center', fig.cap="The rate of vaccine coverage speed in France from Jan 2021 to Aug 2021"}
 age_vaccinations %>%
   select(date | age_group | people_vaccinated_per_hundred) %>% 
   ggplot(aes(x = date, 
@@ -107,13 +169,29 @@ age_vaccinations %>%
   geom_line() +
   scale_fill_viridis(discrete = TRUE) +
   theme(legend.position="none") +
-  ggtitle("Rate of vaccine coverage in France") +
+  ggtitle("Rate of vaccine coverage in France by each age group") +
   theme_ipsum() +
-  theme(legend.position="none") -> plot1
+  theme(legend.position="right") +
+  theme_bw() +
+  xlab("Month") +
+  ylab("People vaccinated per hundred") -> plot1
 
 plot1 <- ggplotly(plot1, tooltip="text")
 plot1
 ```
+According to the above figure, the trend overall is increase, and it's rapidly increase between March to May. What's more, before May, the Vaccination coverage rates of 80+ age group is number one, and after may, it is surpassed by 70-79 age group. Further more, for younger people, age between 49 to 18, it increase slowly until May, and grow rapidly until now. 
 
 
-Rate of vaccine coverage
+## Referance
+
+R Core Team (2021). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
+
+O. (2021). covid-19-data/public/data at master · owid/covid-19-data. GitHub. https://github.com/owid/covid-19-data/tree/master/public/data
+
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+Garnier, S. (2021, May 11). CRAN - Package viridis. CRAN. https://cran.r-project.org/web/packages/viridis/index.html
+
+Comprehensive R Archive Network (CRAN). (2021g, June 18). CRAN - Package dplyr. CRAN. https://cran.r-project.org/web/packages/dplyr/index.html
+
+Comprehensive R Archive Network (CRAN). (2021h, June 18). CRAN - Package plotly. CRAN. https://cran.r-project.org/web/packages/plotly/index.html
