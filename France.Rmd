@@ -182,7 +182,7 @@ plot1
 According to the above figure, the trend overall is increase, and it's rapidly increase between March to May. What's more, before May, the Vaccination coverage rates of 80+ age group is number one, and after may, it is surpassed by 70-79 age group. Further more, for younger people, age between 49 to 18, it increase slowly until May, and grow rapidly until now. 
 
 
-## Referance
+## Reference
 
 R Core Team (2021). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
 
