@@ -2,7 +2,7 @@
 
 
 This is the blog of [Juntong Wei].
-The URL of this blog is [https://jwei55-blog.netlify.app/france].
+The URL of this blog is [https://jwei55-blog.netlify.app].
 
 ## Blog Post 1
 
