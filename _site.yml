@@ -5,6 +5,9 @@ description: |
   ETC 5523 Communicating with Data 
 output_dir: "_site"
 navbar:
+  logo:
+    image: monash.png
+    href: https://jwei55-blog.netlify.app/france
   right:
     - text: "Home"
       href: index.html
@@ -12,6 +15,7 @@ navbar:
       href: France.html 
     - icon: fab fa-github
       href: https://github.com/JuntongWei
+  search: true
 output: 
   distill::distill_article:
     css: "style.css"

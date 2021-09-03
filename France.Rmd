@@ -17,33 +17,103 @@ knitr::opts_chunk$set(echo = FALSE,  message = FALSE, warning = FALSE)
 
 ## Introduction
 
-Have you ever heard of the lyrics: "Imagine there's no countries. It isn't hard to do." from Imagine by John Lennon. It was not that difficult to imagine under the globalization before everything since 2019. However, the world has changed since then. The Coronavirus is familiarly enouth to you all as it has affect all humankind since its outbreak. Due to the Pandemic, the borders had shut down on after another, the cities were also locked down.  What’s more, the living styles had also changed a lot. Since it has been affecting us for a long period of time and it is still existing, it is necessary for us get to know more about it and fight against the disaster together to restore the order of the world. 
-This erport mainly focus on **France**
+Have you ever heard of the lyrics: "Imagine there's no countries. It isn't hard to do." from Imagine by John Lennon. It was not that difficult to imagine under the globalization before everything since 2019. However, the world has changed since then. The Coronavirus is familiarly enouth to you all as it has affect all humankind since its outbreak. Due to the Pandemic, the borders had shut down on after another, the cities were also locked down.  What’s more, the living styles had also changed a lot. Since it has been affecting us for a long period of time and it is still existing, it is necessary for us get to know more about it and fight against the disaster together to restore the order of the world. This report gievs an analysis about **covid-19** in **france**.
 
-This report gievs an analysis about **covid-19** in **france**.
+## Data descreption
 
-### Data exploration
+This blog has used two main data sets as the base for the construction of COVID-19 vaccinations in different group. Both of them were downloaded from github and we can freely use it. First dataset is about the overall vaccination situation in France, which we used is 5 column and `r nrow(France)`rows. And second dataset use `r ncol(age_vaccinations)` columns and `r nrow(age_vaccinations)` rows. 
 
 ```{r laod data}
 library(dplyr)
 library(tidyverse)
 library(readr)
-France <- read_csv("Data/France.csv")
-vaccinations_by_age_group <- read_csv("Data/vaccinations-by-age-group.csv")
-vaccinations <- read_csv("Data/vaccinations.csv")
+library(lubridate)
+library(ggplot2)
+library(formattable)
+
+France <- read_csv("Data/France.csv") %>% 
+  select(date| total_vaccinations| people_vaccinated| people_fully_vaccinated|vaccine)
+
+age_vaccinations <- read_csv("Data/vaccinations-by-age-group.csv") %>% 
+  group_by(location) %>% 
+  subset(location == "France")
+```
+
+### variable descriptions for age_vaccinations data source
+
+|Variables      |Types         | Description                                              |
+|-------------------|--------------|----------------------------------------------------------|
+| date          |    Date      | Date of observation                                      |
+| age_group         |    character      | Date of observation                                      |
+| location          |   character      | Geographical location                                      |
+| people_vaccinated_per_hundred |    Numerical      | Total number of people who received at least one vaccine dose per 100 people in the total population                                      |
+| people_fully_vaccinated_per_hundred |    Numerical      | Total number of people who received all doses prescribed by the vaccination protocol per 100 people in the total population                                       |
+
+#### variable descriptions for France data source 
+
+|Variables      |Types         | Description                                              |
+|-------------------|--------------|----------------------------------------------------------|
+| date          |    Date      | Date of observation                                      |
+| total_vaccinations          |    Numerical      | Total number of COVID-19 vaccination doses administered                                       |
+| people_vaccinated          |   Numerical      | Total number of people who received at least one vaccine dose                                       |
+| people_fully_vaccinated           |    Numerical      | Total number of people who received all doses prescribed by the vaccination protocol                                        |
+| Vaccine         |    character      | Type of vaccine 
+
+
+## Data Exploratory
+
+### Monthly vaccinations status overview in France
+
+```{r tab1}
+France %>% 
+  mutate(month = month(France$date)) %>% 
+  select(total_vaccinations | people_vaccinated | people_fully_vaccinated | month) %>% 
+  group_by(month) %>% 
+  summarise(average_total_vaccin = round(mean(total_vaccinations, na.rm = TRUE)), 
+            average_people_vaccin = round(mean(people_vaccinated, na.rm = TRUE)), 
+            average_people_fully_vaccin = round(mean(people_fully_vaccinated, na.rm = TRUE))) ->aaa
+
+DT::datatable(aaa, options = list(pageLength = 6), 
+              caption = "Monthly vaccinations status, start from 2020-12-27 to 2021-8-30")
+```
+
+From the above table, we can easy find from December 2020 to August 2021 in France, vaccinations are getting better every month. No matter in the number of total vaccinations, people get vaccinated or people get completely vaccinated, we can all easily find the vaccination is being phased in.
+
+#### Numerical summary in age group
+
+```{r }
+age_vaccinations %>% 
+  group_by(age_group) %>% 
+  summarise(count_people_vaccinated = mean(people_vaccinated_per_hundred), 
+          count_fully_vaccinated = mean(people_fully_vaccinated_per_hundred)) -> data2
+
+data2 %>%
+  as.data.frame() %>%
+  rownames_to_column("Variables") %>%
+  formattable(list(area(col = 3:4) ~ color_tile("#F5B7B1", "#7DCEA0")))
+```
+
+The above table illustrate the popularizing rate of vaccination in each age group. The fill color more pink, which means the popularizing rate is low, and if the color more green, the popularizing rate is higher. From that table, we can find the vaccination priorities are based on age, with older people getting vaccinated first. 
+
+### The timeline of vaccination
+
+```{r fig, }
+age_vaccinations %>%
+  select(date | age_group | people_vaccinated_per_hundred) %>% 
+  ggplot(aes(x = date, 
+             y = people_vaccinated_per_hundred, 
+             color = age_group, 
+             text = age_group)) +
+  geom_line() +
+  scale_fill_viridis(discrete = TRUE) +
+  theme(legend.position="none") +
+  ggtitle("Rate of vaccine coverage in France") +
+  theme_ipsum() +
+  theme(legend.position="none") -> plot1
+
+plot1 <- ggplotly(plot1, tooltip="text")
+plot1
 ```
 
 
-## analysis
-```{r}
-vaccinations_by_age_group %>% 
-  group_by(location) %>% 
-  subset(location == "France") -> age_vaccinations
-
-vaccinations %>% 
-  group_by(location) %>% 
-  subset(location == "France") -> vaccinations
-```
-
-### Numerical summary statistics
-
+Rate of vaccine coverage

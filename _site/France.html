@@ -2376,7 +2376,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: var(--hover-color, white);
   }</style>
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+  <script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+  <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/datatables-binding-0.18/datatables.js"></script>
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+  <script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+  <link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2419,7 +2428,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <header class="header header--fixed" role="banner">
 <nav class="distill-site-nav distill-site-header">
 <div class="nav-left">
+<a class="logo" href="https://jwei55-blog.netlify.app/france">
+<img src="monash.png" alt="Logo"/>
+</a>
 <a href="index.html" class="title">ETC 5523 Communicating with Data</a>
+<input id="distill-search" class="nav-search hidden" type="text" placeholder="Search..."/>
 </div>
 <div class="nav-right">
 <a href="index.html">Home</a>
@@ -2451,17 +2464,211 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="d-article">
 <p><img src="4300.jpg" width="20" /></p>
 <h2 id="introduction">Introduction</h2>
-<p>Have you ever heard of the lyrics: “Imagine there’s no countries. It isn’t hard to do.” from Imagine by John Lennon. It was not that difficult to imagine under the globalization before everything since 2019. However, the world has changed since then. The Coronavirus is familiarly enouth to you all as it has affect all humankind since its outbreak. Due to the Pandemic, the borders had shut down on after another, the cities were also locked down. What’s more, the living styles had also changed a lot. Since it has been affecting us for a long period of time and it is still existing, it is necessary for us get to know more about it and fight against the disaster together to restore the order of the world. This erport mainly focus on <strong>France</strong></p>
-<p>This report gievs an analysis about <strong>covid-19</strong> in <strong>france</strong>.</p>
-<h3 id="data-exploration">Data exploration</h3>
+<p>Have you ever heard of the lyrics: “Imagine there’s no countries. It isn’t hard to do.” from Imagine by John Lennon. It was not that difficult to imagine under the globalization before everything since 2019. However, the world has changed since then. The Coronavirus is familiarly enouth to you all as it has affect all humankind since its outbreak. Due to the Pandemic, the borders had shut down on after another, the cities were also locked down. What’s more, the living styles had also changed a lot. Since it has been affecting us for a long period of time and it is still existing, it is necessary for us get to know more about it and fight against the disaster together to restore the order of the world. This report gievs an analysis about <strong>covid-19</strong> in <strong>france</strong>.</p>
+<h2 id="data-descreption">Data descreption</h2>
+<p>This blog has used two main data sets as the base for the construction of COVID-19 vaccinations in different group. Both of them were downloaded from github and we can freely use it. First dataset is about the overall vaccination situation in France, which we used is 5 column and 247rows. And second dataset use 5 columns and 192 rows.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<h2 id="analysis">analysis</h2>
+<h4 id="variable-descriptions-for-age_vaccinations-data-source">variable descriptions for age_vaccinations data source</h4>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 15%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variables</th>
+<th>Types</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>date</td>
+<td>Date</td>
+<td>Date of observation</td>
+</tr>
+<tr class="even">
+<td>age_group</td>
+<td>character</td>
+<td>Date of observation</td>
+</tr>
+<tr class="odd">
+<td>location</td>
+<td>character</td>
+<td>Geographical location</td>
+</tr>
+<tr class="even">
+<td>people_vaccinated_per_hundred</td>
+<td>Numerical</td>
+<td>Total number of people who received at least one vaccine dose per 100 people in the total population</td>
+</tr>
+<tr class="odd">
+<td>people_fully_vaccinated_per_hundred</td>
+<td>Numerical</td>
+<td>Total number of people who received all doses prescribed by the vaccination protocol per 100 people in the total population</td>
+</tr>
+</tbody>
+</table>
+<h4 id="variable-descriptions-for-france-data-source">variable descriptions for France data source</h4>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 15%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variables</th>
+<th>Types</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>date</td>
+<td>Date</td>
+<td>Date of observation</td>
+</tr>
+<tr class="even">
+<td>total_vaccinations</td>
+<td>Numerical</td>
+<td>Total number of COVID-19 vaccination doses administered</td>
+</tr>
+<tr class="odd">
+<td>people_vaccinated</td>
+<td>Numerical</td>
+<td>Total number of people who received at least one vaccine dose</td>
+</tr>
+<tr class="even">
+<td>people_fully_vaccinated</td>
+<td>Numerical</td>
+<td>Total number of people who received all doses prescribed by the vaccination protocol</td>
+</tr>
+<tr class="odd">
+<td>Vaccine</td>
+<td>character</td>
+<td>Type of vaccine</td>
+</tr>
+</tbody>
+</table>
+<h2 id="analysis">Analysis</h2>
+<h4 id="monthly-vaccinations-status">Monthly vaccinations status</h4>
 <div class="layout-chunk" data-layout="l-body">
-
+<div id="htmlwidget-30945d124b162d11cfbe" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-30945d124b162d11cfbe">{"x":{"filter":"none","caption":"<caption>Monthly vaccinations status, start from 2020-12-27 to 2021-8-30<\/caption>","data":[["1","2","3","4","5","6","7","8","9"],[1,2,3,4,5,6,7,8,12],[629059,3215012,8037691,16727954,29764397,46351728,64456231,81278771,797],[623064,2427598,5747255,12304759,20958227,31053677,37851619,46214464,797],[5995,787415,2290436,4428664,8971975,15758862,27305160,36017362,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>month<\/th>\n      <th>average_total_vaccin<\/th>\n      <th>average_people_vaccin<\/th>\n      <th>average_people_fully_vaccin<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
-<h3 id="numerical-summary-statistics">Numerical summary statistics</h3>
+<p>From the above table, we can easy find from December 2020 to August 2021, vaccinations are getting better every month. No matter in the number of total vaccinations, people get vaccinated or people get completely vaccinated, we can all easily find the vaccination is being phased in.</p>
+<h4 id="numerical-summary-in-age-group">Numerical summary in age group</h4>
+<div class="layout-chunk" data-layout="l-body">
+<table class="table table-condensed">
+<thead>
+<tr>
+<th style="text-align:right;">
+Variables
+</th>
+<th style="text-align:right;">
+age_group
+</th>
+<th style="text-align:right;">
+count_people_vaccinated
+</th>
+<th style="text-align:right;">
+count_fully_vaccinated
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+18-24
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #d8bcac">19.88594</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #f5b7b1">8.205938</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+25-49
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #cebeab">23.82656</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #edb8af">11.450313</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50-59
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #b0c4a7">36.14937</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #dabcad">19.139063</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+60-69
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #9ec7a4">43.43031</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #cdbeab">24.479688</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+70-79
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #7dcea0">57.26656</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #a8c5a6">39.455937</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+80+
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #7ecda0">56.57844</span>
+</td>
+<td style="text-align:right;">
+<span style="display: block; padding: 0 4px; border-radius: 4px; background-color: #a1c6a5">42.164375</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The above table illustrate the popularizing rate of vaccination in each age group. The fill color more pink, which means the popularizing rate is low, and if the color more green, the popularizing rate is higher. From that table, we can find the vaccination priorities are based on age, with older people getting vaccinated first.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
