@@ -11,4 +11,5 @@ knitr::opts_chunk$set(echo = FALSE)
 ![](monash.png){width=100}
 
 [Enter Blog about France](France.html)
-[Enter Blog about Indonesia](Indonesia.html)
+
+<br />[Enter Blog about Indonesia](Indonesia.html)
