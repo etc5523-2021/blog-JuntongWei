@@ -11,9 +11,110 @@ output:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r load data}
+# libraries:
+library(dplyr)
+library(tidyverse)
+library(readr)
+library(plotly)
+library(ggplot2)
+library(gganimate)
+library(hrbrthemes)
+library(viridis)
+library(tidycovid19)
+library(zoo)
+library(dygraphs)
+library(xts)          # To make the convertion data-frame / xts format
+library(lubridate)
+
+#get data
+vaccinations <- read_csv("_site/Data/vaccinations.csv")
+Indonesia <- vaccinations %>% 
+  filter(vaccinations$location == "Indonesia")
+
 ```
 
 
-• Two short data stories linked to the graphs presented(6marks)
-• At least two graphs that support your data story
+## Question one: 
+###Is the daily vaccine fully  inoculated? Is there a shortage or waste of vaccine?
+
+```{r wei1, fig.align='center', fig.cap="Comparing the daily total vaccinations and the daily vaccinated people"}
+#plot
+Indonesia_long <- Indonesia %>% 
+  mutate(unvaccinated = total_vaccinations - people_vaccinated) %>% 
+  select(date| total_vaccinations| people_vaccinated |unvaccinated) %>% 
+  pivot_longer("total_vaccinations":"unvaccinated", names_to = "Vaccinated", values_to = "Numbers")
+
+Indonesia_long %>%
+  ggplot( aes(x=date, y=Numbers, group=Vaccinated, color=Vaccinated)) +
+    geom_line() +
+    geom_point() +
+    scale_color_viridis(discrete = TRUE) +
+    ggtitle("Total number of vaccines and vaccinations per day") +
+    theme_ipsum() +
+    ylab("Number of vaccinated") +
+    transition_reveal(date) 
+
+```
+
+According to the Figure \@ref(fig:wei1), with the spread of vaccines, more and more vaccinations are being wasted per day, which is negative to the resource utilization. Even, it is a waste for the global  vaccinations resources. Many countries are still in short vaccination supply, for instance, Africa facing a shortage of 470 million doses of COVID-19 vaccine in 2021. However, up to 35,855,211 doses are wasted a day in Indonesia, which means the distribution and scheduling of vaccines in daily is problematic. 
+
+## Question two: 
+### Overview of the new cases and accumulated death in Indonesia from Jan 2020 to Sep 2021
+
+```{r wei2, fig.align='center', fig.cap="comparing the number of new cases and accumulated death in daily from 2020-01-29 to 2021-09-14"}
+df <- download_merged_data(cached = TRUE, silent = TRUE)
+
+df2 <- df %>%
+  filter(iso3c == "IDN") %>%
+  mutate(
+    new_cases = confirmed - lag(confirmed),
+    ave_new_cases = rollmean(new_cases, 7, na.pad=TRUE, align="right")
+  ) %>%
+  filter(!is.na(new_cases), !is.na(ave_new_cases))
+
+df3 <- df2 %>% 
+  select(date | new_cases | deaths)
+
+df4 <- df3 %>% 
+  xts(order.by = df3$date)
+
+dygraph(df4, main = "New cases and Accumulated deaths in daily from Jan 2020 to Sep 2021") %>%
+  dyAxis("y",label = "new cases") %>%
+  dyAxis("y2", label = "accumulated deaths") %>%
+  dySeries("new_cases", 
+           axis = "y", 
+           label = "New cases",
+           stepPlot = TRUE, 
+           fillGraph = TRUE, 
+           color = "blue") %>%
+  dySeries("deaths", 
+           axis = "y2", 
+           stepPlot = TRUE, 
+           color = "green") %>%
+  dyOptions(includeZero = TRUE, 
+            axisLineColor = "navy", 
+            gridLineColor = "lightblue", 
+            labelsUTC = TRUE, 
+            fillGraph=TRUE, 
+            fillAlpha=0.1, 
+            drawGrid = FALSE, 
+            ) %>%
+  dyRangeSelector() %>%
+  dyHighlight(highlightCircleSize = 5, 
+              highlightSeriesBackgroundAlpha = 0.2,
+              hideOnMouseOut = FALSE) %>%
+  dyRoller(rollPeriod = 1)
+```
+
+From the up Figure \@ref(fig:wei2), this plot illustrate the number of new cases and accumulated death in daily in this period, and we can find 2 interesting points:
+<br /> - About the **New cases** increase in daily, there are two main peaks one is in Jan 2021 and the other is July 2021. This shows that the situation of COVID-19 infection is repeated, it is necessary to strengthen the control of the virus. 
+<br /> - About the number of **Accumulated deaths** in Indonesia, there is a rapidly increase start from Jun 2021, which is relevant with the second virus outbreak, from that, we can say the increase number of deaths is highly relevant with the number of new cases. 
+
+
+
+
+
