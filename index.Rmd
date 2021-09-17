@@ -8,7 +8,7 @@ site: distill::distill_website
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-[Enter My Blog](France.html)
 ![](monash.png){width=100}
 
+[Enter Blog about France](France.html)
+[Enter Blog about Indonesia](Indonesia.html)
