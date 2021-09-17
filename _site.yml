@@ -13,6 +13,8 @@ navbar:
       href: index.html
     - text: "France"
       href: France.html 
+    - text: "Indonesia"
+      href: Indonesia.html 
     - icon: fab fa-github
       href: https://github.com/JuntongWei
   search: true
